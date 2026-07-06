@@ -5,75 +5,113 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0E6E66">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>PhD Weekly Tracker</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<meta name="apple-mobile-web-app-title" content="Work Tracker">
+<title>Work Tracker</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✅</text></svg>">
 <style>
   :root {
     --paper:#F4F5F2; --card:#FFFFFF; --ink:#1C2733; --ink-soft:#5A6875;
     --line:#DDE2E0; --teal:#0E6E66; --teal-soft:#E2F0EE;
     --amber:#A15C07; --amber-soft:#FBEEDC; --red:#9E3B3B; --red-soft:#F6E4E4;
-    --navy:#2B4162; --navy-soft:#E7ECF3;
+    --navy:#2B4162; --navy-soft:#E7ECF3; --shadow:0 1px 3px rgba(28,39,51,.06);
   }
-  * { box-sizing:border-box; margin:0; }
-  body { background:var(--paper); color:var(--ink); font-family:'Helvetica Neue',Arial,sans-serif; padding:16px 12px calc(24px + env(safe-area-inset-bottom)); }
-  .wrap { max-width:780px; margin:0 auto; }
-  h1 { font-family:Georgia,serif; font-size:26px; margin:2px 0 4px; }
+  [data-theme="dark"] {
+    --paper:#141A21; --card:#1D242D; --ink:#E8ECEF; --ink-soft:#93A1AE;
+    --line:#2C3641; --teal:#2FA69A; --teal-soft:#173832;
+    --amber:#D98E2B; --amber-soft:#3A2C15; --red:#D06A6A; --red-soft:#3B2323;
+    --navy:#7B9CC9; --navy-soft:#212B3A; --shadow:0 1px 3px rgba(0,0,0,.3);
+  }
+  * { box-sizing:border-box; margin:0; -webkit-tap-highlight-color:transparent; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--paper); color:var(--ink); font-family:'Helvetica Neue',Arial,sans-serif;
+    padding:16px 12px calc(84px + env(safe-area-inset-bottom)); transition:background .3s,color .3s; }
+  .wrap { max-width:820px; margin:0 auto; }
+  h1 { font-family:Georgia,serif; font-size:24px; margin:2px 0 2px; }
   .eyebrow { font-size:11px; letter-spacing:2px; color:var(--teal); text-transform:uppercase; }
   .sub { font-size:13px; color:var(--ink-soft); }
-  .banner { background:var(--amber-soft); border:1px solid var(--amber); color:var(--amber); border-radius:10px; padding:10px 14px; margin:12px 0; font-size:13px; }
-  .tabs { display:flex; gap:4px; flex-wrap:wrap; margin:14px 0; }
-  .tab { border:none; cursor:pointer; font-size:13px; padding:8px 12px; border-radius:8px; background:transparent; color:var(--ink-soft); }
-  .tab.on { background:var(--ink); color:#fff; font-weight:600; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:10px; }
+  .banner { background:var(--amber-soft); border:1px solid var(--amber); color:var(--amber); border-radius:12px; padding:10px 14px; margin:12px 0; font-size:13px; }
+  .banner.cele { background:var(--teal-soft); border-color:var(--teal); color:var(--teal); font-size:14px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:10px; box-shadow:var(--shadow); }
   .card.today { border-color:var(--teal); box-shadow:0 0 0 2px var(--teal-soft); }
   .dayhead { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px; }
   .dayname { font-family:Georgia,serif; font-size:16px; }
-  .todaytag { font-size:11px; color:var(--teal); margin-left:8px; }
+  .todaytag { font-size:11px; color:var(--teal); margin-left:8px; font-weight:600; }
   .datetag { font-size:12px; color:var(--ink-soft); }
-  .task { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid var(--line); }
-  .dot { width:9px; height:9px; border-radius:9px; flex-shrink:0; }
-  .dot.pending{background:var(--amber)} .dot.done{background:var(--teal)} .dot.missed{background:var(--red)}
-  .tasktext { flex:1; font-size:14px; min-width:120px; }
-  .tasktext.done { text-decoration:line-through; opacity:.6; }
-  .timechip { background:transparent; color:var(--navy); border:1px dashed var(--line); border-radius:6px; font-size:12px; padding:2px 6px; cursor:pointer; min-width:46px; flex-shrink:0; }
+  .task { display:flex; align-items:center; gap:8px; padding:7px 0 7px 8px; border-bottom:1px solid var(--line); border-left:3px solid transparent; border-radius:2px; }
+  .tasktext { flex:1; font-size:14px; min-width:110px; line-height:1.35; }
+  .tasktext.done { text-decoration:line-through; opacity:.55; }
+  .timechip { background:transparent; color:var(--navy); border:1px dashed var(--line); border-radius:7px; font-size:12px; padding:2px 6px; cursor:pointer; min-width:46px; flex-shrink:0; }
   .timechip.set { background:var(--navy-soft); border-color:var(--navy); }
-  .ibtn { background:transparent; border:1px solid var(--line); color:var(--ink-soft); border-radius:6px; min-width:26px; height:26px; font-size:13px; cursor:pointer; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
+  .ibtn { background:transparent; border:1px solid var(--line); color:var(--ink-soft); border-radius:8px; min-width:28px; height:28px; font-size:13px; cursor:pointer; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; transition:transform .1s; }
+  .ibtn:active { transform:scale(.92); }
   .ibtn.ok { border-color:var(--teal); color:var(--teal); }
   .ibtn.ok.on { background:var(--teal); color:#fff; }
   .ibtn.no { border-color:var(--red); color:var(--red); }
   .ibtn.no.on { background:var(--red); color:#fff; }
-  .addrow { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
-  input[type=text], input[type=time] { border:1px solid var(--line); border-radius:6px; padding:7px 8px; font-size:14px; color:var(--ink); background:var(--paper); outline:none; }
-  input[type=text] { flex:1; min-width:150px; }
-  .btn { background:var(--teal); color:#fff; border:1px solid var(--teal); border-radius:6px; padding:7px 14px; font-size:13px; cursor:pointer; }
+  .addrow { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; align-items:center; }
+  input[type=text], input[type=time], select { border:1px solid var(--line); border-radius:8px; padding:8px 9px; font-size:14px; color:var(--ink); background:var(--paper); outline:none; }
+  input[type=text] { flex:1; min-width:140px; }
+  input[type=text]:focus { border-color:var(--teal); }
+  .btn { background:var(--teal); color:#fff; border:1px solid var(--teal); border-radius:8px; padding:8px 14px; font-size:13px; cursor:pointer; transition:transform .1s; }
+  .btn:active { transform:scale(.96); }
   .btn.ghost { background:transparent; color:var(--ink); border-color:var(--line); }
   .btn.soft { background:var(--teal-soft); color:var(--teal); border-color:var(--teal); }
   .navrow { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px; }
   .navtitle { font-family:Georgia,serif; font-size:15px; text-align:center; flex:1; }
   .empty { font-size:13px; color:var(--ink-soft); font-style:italic; padding:4px 0; }
   .hint { font-size:12px; color:var(--amber); margin-top:6px; }
-  .pill { font-size:12px; border-radius:6px; padding:2px 8px; flex-shrink:0; }
+  .pill { font-size:12px; border-radius:7px; padding:2px 8px; flex-shrink:0; }
   .pill.missed { color:var(--red); background:var(--red-soft); }
   .pill.overdue { color:var(--amber); background:var(--amber-soft); }
+  .catdot { width:8px; height:8px; border-radius:8px; flex-shrink:0; }
   .bar { background:var(--line); border-radius:6px; height:10px; flex:1; overflow:hidden; }
-  .bar > div { height:100%; border-radius:6px; background:var(--teal); transition:width .3s; }
-  .bar.navy > div { background:var(--navy); }
+  .bar > div { height:100%; border-radius:6px; background:var(--teal); transition:width .4s; }
   .statrow { display:flex; align-items:center; gap:10px; padding:5px 0; }
-  .statlabel { font-size:12px; color:var(--ink-soft); width:76px; flex-shrink:0; }
-  .statnum { font-size:12px; color:var(--ink-soft); width:60px; text-align:right; flex-shrink:0; }
+  .statlabel { font-size:12px; color:var(--ink-soft); width:80px; flex-shrink:0; }
+  .statnum { font-size:12px; color:var(--ink-soft); width:58px; text-align:right; flex-shrink:0; }
   .logrow { font-size:13px; padding:6px 0; border-bottom:1px solid var(--line); }
   .logts { color:var(--ink-soft); font-size:12px; margin-right:8px; }
   .sectitle { font-family:Georgia,serif; font-size:16px; margin-bottom:8px; }
-  .auth { text-align:center; padding:60px 20px; }
-  .auth h1 { font-size:30px; margin-bottom:8px; }
+  .auth { text-align:center; padding:70px 20px; }
+  .auth h1 { font-size:32px; margin-bottom:8px; }
   .topbar { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .toprt { display:flex; align-items:center; gap:8px; }
   .userchip { font-size:12px; color:var(--ink-soft); text-align:right; }
   .userchip a { color:var(--teal); cursor:pointer; text-decoration:underline; }
   .savestate { font-size:12px; color:var(--ink-soft); margin-left:8px; }
   .savestate.err { color:var(--red); }
-  #configwarn { background:var(--red-soft); border:1px solid var(--red); color:var(--red); border-radius:10px; padding:14px; margin:20px auto; max-width:600px; font-size:14px; line-height:1.5; }
+  #configwarn { background:var(--red-soft); border:1px solid var(--red); color:var(--red); border-radius:12px; padding:14px; margin:20px auto; max-width:600px; font-size:14px; line-height:1.5; }
   code { background:var(--navy-soft); padding:1px 5px; border-radius:4px; font-size:13px; }
+
+  /* hero (Today tab) */
+  .hero { display:flex; align-items:center; gap:18px; }
+  .ring { position:relative; width:96px; height:96px; flex-shrink:0; }
+  .ring svg { transform:rotate(-90deg); }
+  .ring .pct { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .ring .pct b { font-family:Georgia,serif; font-size:22px; }
+  .ring .pct span { font-size:10px; color:var(--ink-soft); }
+  .herostats { flex:1; display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--ink-soft); }
+  .streak { font-size:15px; color:var(--ink); }
+  .quickstats { display:flex; gap:14px; flex-wrap:wrap; }
+  .quickstats b { color:var(--ink); }
+
+  /* tabs: top on desktop, bottom bar on mobile */
+  .tabs { display:flex; gap:4px; flex-wrap:wrap; margin:14px 0; }
+  .tab { border:none; cursor:pointer; font-size:13px; padding:8px 12px; border-radius:10px; background:transparent; color:var(--ink-soft); position:relative; }
+  .tab.on { background:var(--ink); color:var(--paper); font-weight:600; }
+  [data-theme="dark"] .tab.on { background:var(--teal); color:#fff; }
+  .tab .ico { display:none; }
+  .badge { position:absolute; top:2px; right:2px; background:var(--red); color:#fff; font-size:9px; min-width:14px; height:14px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; padding:0 3px; }
+  @media (max-width:640px){
+    .tabs { position:fixed; left:0; right:0; bottom:0; margin:0; background:var(--card); border-top:1px solid var(--line);
+      display:flex; flex-wrap:nowrap; justify-content:space-around; padding:6px 4px calc(6px + env(safe-area-inset-bottom)); z-index:50; box-shadow:0 -2px 10px rgba(0,0,0,.06); }
+    .tab { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:10px; padding:4px 6px; flex:1; }
+    .tab .ico { display:block; font-size:18px; }
+    .tab.on { background:transparent; color:var(--teal); font-weight:700; }
+  }
+  @media (min-width:641px){ body { padding-bottom:24px; } }
+  @keyframes pop { 0%{transform:scale(.6);opacity:0} 70%{transform:scale(1.08)} 100%{transform:scale(1);opacity:1} }
+  .pop { animation:pop .35s ease; }
 </style>
 </head>
 <body>
@@ -81,7 +119,7 @@
 
 <script type="module">
 /* ============================================================
-   1. PASTE YOUR FIREBASE CONFIG BELOW (from Firebase console)
+   FIREBASE CONFIG (Work-Tracker project)
    ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyD2O7PgqS7TZX0KyBI9AwsPnOVrIq5UHYg",
@@ -100,17 +138,15 @@ import { initializeFirestore, persistentLocalCache, doc, getDoc, setDoc, collect
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const appEl = document.getElementById("app");
-
 if (firebaseConfig.apiKey.startsWith("PASTE_")) {
-  appEl.innerHTML = `<div id="configwarn"><b>Setup needed:</b> open <code>index.html</code> and paste your Firebase config into the block at the top of the &lt;script&gt; section. See the README for the step-by-step guide.</div>`;
-  throw new Error("Firebase config not set");
+  appEl.innerHTML = `<div id="configwarn"><b>Setup needed:</b> paste your Firebase config into index.html.</div>`;
+  throw new Error("no config");
 }
-
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = initializeFirestore(fbApp, { localCache: persistentLocalCache() });
 
-/* ---------- date helpers ---------- */
+/* ---------- helpers ---------- */
 const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 const mondayOf = d => { const c=new Date(d); c.setDate(c.getDate()-((c.getDay()+6)%7)); c.setHours(0,0,0,0); return c; };
 const addDays = (d,n) => { const c=new Date(d); c.setDate(c.getDate()+n); return c; };
@@ -118,277 +154,352 @@ const DAY_NAMES = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const niceDate = d => d.toLocaleDateString("en-GB",{day:"numeric",month:"short"});
 const niceFull = s => new Date(s+"T00:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"});
-const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const CATS = {
+  work:{label:"Deep work", color:"#2B4162"},
+  writing:{label:"Writing", color:"#0E6E66"},
+  meeting:{label:"Meeting", color:"#7C3AED"},
+  admin:{label:"Admin", color:"#A15C07"},
+  learning:{label:"Learning", color:"#B4257A"},
+  personal:{label:"Personal", color:"#5A6875"},
+};
+const catColor = c => (CATS[c]||{}).color || "transparent";
+const greeting = () => { const h=new Date().getHours(); return h<12?"Good morning":h<18?"Good afternoon":"Good evening"; };
 
 /* ---------- state ---------- */
-let user = null;
-let tab = "week";
-let viewMonday = mondayOf(new Date());
-let viewMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-let week = { days:{}, log:[] };
-let planWeek = { days:{}, log:[] };
-let monthData = { goals:[] };
-let missedList = null;
-let progressData = null;
-let saveState = "saved";
-const todayIso = iso(new Date());
-const thisMonday = mondayOf(new Date());
-const dow = new Date().getDay();
-const isPlanningDay = dow === 5 || dow === 1;
+let user=null, tab="today";
+let viewMonday=mondayOf(new Date());
+let viewMonth=new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+let week={days:{},log:[]}, planWeek={days:{},log:[]}, monthData={goals:[]};
+let missedList=null, progressData=null, streak=null, missedCount=0;
+let saveState="saved";
+const todayIso=iso(new Date());
+const thisMonday=mondayOf(new Date());
+const dow=new Date().getDay();
+const isPlanningDay=dow===5||dow===1;
+let theme = localStorage.getItem("wt-theme") || "light";
+document.documentElement.setAttribute("data-theme", theme);
 
 /* ---------- firestore io ---------- */
-const weekRef  = m => doc(db, "users", user.uid, "weeks", iso(m));
-const monthRef = d => doc(db, "users", user.uid, "months", `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);
-const loadDoc = async (ref, fallback) => {
-  try { const s = await getDoc(ref); return s.exists() ? s.data() : fallback; }
-  catch(e){ console.error(e); return fallback; }
+const weekRef  = m => doc(db,"users",user.uid,"weeks",iso(m));
+const monthRef = d => doc(db,"users",user.uid,"months",`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);
+const loadDocX = async (ref,f)=>{ try{const s=await getDoc(ref);return s.exists()?s.data():f;}catch(e){console.error(e);return f;} };
+const saveDocX = async (ref,data)=>{
+  saveState="saving"; paintSave();
+  try{ await setDoc(ref,data); saveState="saved"; }catch(e){ console.error(e); saveState="error"; }
+  paintSave();
 };
-const saveDoc = async (ref, data) => {
-  saveState = "saving"; paintSaveState();
-  try { await setDoc(ref, data); saveState = "saved"; }
-  catch(e){ console.error(e); saveState = "error"; }
-  paintSaveState();
-};
-function paintSaveState(){
-  const el = document.getElementById("savestate");
-  if (!el) return;
-  el.className = "savestate" + (saveState==="error" ? " err" : "");
-  el.textContent = saveState==="saving" ? "· saving…" : saveState==="error" ? "· save failed — check connection" : "";
+function paintSave(){
+  const el=document.getElementById("savestate"); if(!el)return;
+  el.className="savestate"+(saveState==="error"?" err":"");
+  el.textContent=saveState==="saving"?"· saving…":saveState==="error"?"· save failed — check connection":"";
 }
-
-async function mutateWeek(monday, fn, logEntry){
-  const isView = iso(monday)===iso(viewMonday), isPlan = iso(monday)===iso(addDays(viewMonday,7));
-  let data = isView ? week : isPlan ? planWeek : await loadDoc(weekRef(monday), {days:{},log:[]});
-  const next = { days:{...data.days}, log:[...(data.log||[])] };
+async function mutateWeek(monday,fn,logEntry){
+  const isView=iso(monday)===iso(viewMonday), isPlan=iso(monday)===iso(addDays(viewMonday,7)), isThis=iso(monday)===iso(thisMonday);
+  let data = isView?week : isPlan?planWeek : await loadDocX(weekRef(monday),{days:{},log:[]});
+  if(isThis && !isView && !isPlan) data = await loadDocX(weekRef(monday),{days:{},log:[]});
+  const next={days:{...data.days},log:[...(data.log||[])]};
   fn(next);
-  if (logEntry) next.log.unshift({ ts:new Date().toISOString(), text:logEntry });
-  if (next.log.length > 400) next.log.length = 400;
-  if (isView) week = next;
-  if (isPlan) planWeek = next;
+  if(logEntry) next.log.unshift({ts:new Date().toISOString(),text:logEntry});
+  if(next.log.length>400) next.log.length=400;
+  if(isView) week=next;
+  if(isPlan) planWeek=next;
+  if(isThis && iso(viewMonday)===iso(thisMonday)) week=next;
   render();
-  await saveDoc(weekRef(monday), next);
+  await saveDocX(weekRef(monday),next);
   return next;
 }
+const sortByTime=(a,b)=>(a.time||"99:99").localeCompare(b.time||"99:99");
+const findWeekObj = mIso => iso(viewMonday)===mIso?week:iso(addDays(viewMonday,7))===mIso?planWeek:week;
 
-/* ---------- task actions (exposed for onclick) ---------- */
-const sortByTime = (a,b) => (a.time||"99:99").localeCompare(b.time||"99:99");
-const findWeekObj = mIso => iso(viewMonday)===mIso ? week : planWeek;
-
-window.A = {
-  setTab(t){ tab=t; if(t==="plan") loadPlan(); if(t==="missed") loadMissed(); if(t==="month") loadMonth(); if(t==="progress") loadProgress(); render(); },
-  nav(n){ viewMonday = addDays(viewMonday, n*7); loadWeek(); },
-  jumpToday(){ viewMonday = thisMonday; loadWeek(); },
-  navMonth(n){ viewMonth = new Date(viewMonth.getFullYear(), viewMonth.getMonth()+n, 1); loadMonth(); },
-  add(mIso, dayIso){
-    const ti = document.getElementById("in-"+dayIso), tt = document.getElementById("tm-"+dayIso);
-    const text = (ti?.value||"").trim(); if(!text) return;
-    const time = tt?.value||"";
-    mutateWeek(new Date(mIso+"T00:00:00"), d=>{
-      d.days[dayIso]=[...(d.days[dayIso]||[]),{id:Date.now()+Math.random().toString(16).slice(2),text,time,status:"pending"}];
+/* ---------- actions ---------- */
+window.A={
+  setTab(t){ tab=t; if(t==="plan")loadPlan(); if(t==="review")loadMissed(); if(t==="month")loadMonth(); if(t==="progress")loadProgress(); render(); window.scrollTo(0,0); },
+  nav(n){ viewMonday=addDays(viewMonday,n*7); loadWeek(); },
+  jumpToday(){ viewMonday=thisMonday; loadWeek(); },
+  navMonth(n){ viewMonth=new Date(viewMonth.getFullYear(),viewMonth.getMonth()+n,1); loadMonth(); },
+  theme(){ theme=theme==="light"?"dark":"light"; localStorage.setItem("wt-theme",theme); document.documentElement.setAttribute("data-theme",theme); render(); },
+  add(mIso,dayIso,idSuffix){
+    const ti=document.getElementById("in-"+idSuffix), tt=document.getElementById("tm-"+idSuffix), tc=document.getElementById("ct-"+idSuffix);
+    const text=(ti?.value||"").trim(); if(!text)return;
+    const time=tt?.value||"", cat=tc?.value||"";
+    mutateWeek(new Date(mIso+"T00:00:00"),d=>{
+      d.days[dayIso]=[...(d.days[dayIso]||[]),{id:Date.now()+Math.random().toString(16).slice(2),text,time,cat,status:"pending"}];
     },`Added "${text}"${time?` at ${time}`:""} on ${dayIso}`);
   },
-  status(mIso, dayIso, id, st){
-    mutateWeek(new Date(mIso+"T00:00:00"), d=>{
+  status(mIso,dayIso,id,st){
+    mutateWeek(new Date(mIso+"T00:00:00"),d=>{
       d.days[dayIso]=(d.days[dayIso]||[]).map(t=>t.id===id?{...t,status:t.status===st?"pending":st}:t);
-    },`Marked task ${st==="done"?"accomplished":"not accomplished"} on ${dayIso}`);
+    },`Marked task ${st==="done"?"accomplished":"not accomplished"} on ${dayIso}`).then(()=>{ if(dayIso===todayIso){streak=null;computeStreak();} });
   },
-  del(mIso, dayIso, id){
+  del(mIso,dayIso,id){
     const t=(findWeekObj(mIso).days[dayIso]||[]).find(x=>x.id===id);
-    mutateWeek(new Date(mIso+"T00:00:00"), d=>{
-      d.days[dayIso]=(d.days[dayIso]||[]).filter(x=>x.id!==id);
-    },`Removed "${t?.text||"task"}" from ${dayIso}`);
+    if(t && !confirm(`Delete "${t.text}"?`)) return;
+    mutateWeek(new Date(mIso+"T00:00:00"),d=>{ d.days[dayIso]=(d.days[dayIso]||[]).filter(x=>x.id!==id); },
+      `Removed "${t?.text||"task"}" from ${dayIso}`);
   },
-  edit(mIso, dayIso, id){
-    const t=(findWeekObj(mIso).days[dayIso]||[]).find(x=>x.id===id); if(!t) return;
-    const v=prompt("Edit activity:", t.text);
-    if(v===null||!v.trim()||v.trim()===t.text) return;
-    mutateWeek(new Date(mIso+"T00:00:00"), d=>{
-      d.days[dayIso]=(d.days[dayIso]||[]).map(x=>x.id===id?{...x,text:v.trim()}:x);
-    },`Changed "${t.text}" → "${v.trim()}" on ${dayIso}`);
+  edit(mIso,dayIso,id){
+    const t=(findWeekObj(mIso).days[dayIso]||[]).find(x=>x.id===id); if(!t)return;
+    const v=prompt("Edit activity:",t.text);
+    if(v===null||!v.trim()||v.trim()===t.text)return;
+    mutateWeek(new Date(mIso+"T00:00:00"),d=>{ d.days[dayIso]=(d.days[dayIso]||[]).map(x=>x.id===id?{...x,text:v.trim()}:x); },
+      `Changed "${t.text}" → "${v.trim()}" on ${dayIso}`);
   },
-  time(mIso, dayIso, id){
-    const t=(findWeekObj(mIso).days[dayIso]||[]).find(x=>x.id===id); if(!t) return;
-    const v=prompt("Set time (HH:MM, empty to clear):", t.time||"");
-    if(v===null) return;
-    mutateWeek(new Date(mIso+"T00:00:00"), d=>{
-      d.days[dayIso]=(d.days[dayIso]||[]).map(x=>x.id===id?{...x,time:v.trim()}:x);
-    },`Set time ${v.trim()||"(none)"} on ${dayIso}`);
+  time(mIso,dayIso,id){
+    const t=(findWeekObj(mIso).days[dayIso]||[]).find(x=>x.id===id); if(!t)return;
+    const v=prompt("Set time (HH:MM, empty to clear):",t.time||"");
+    if(v===null)return;
+    mutateWeek(new Date(mIso+"T00:00:00"),d=>{ d.days[dayIso]=(d.days[dayIso]||[]).map(x=>x.id===id?{...x,time:v.trim()}:x); },
+      `Set time ${v.trim()||"(none)"} on ${dayIso}`);
   },
-  async reschedule(srcDayIso, id){
-    const srcMon = mondayOf(new Date(srcDayIso+"T00:00:00"));
-    const src = await loadDoc(weekRef(srcMon),{days:{},log:[]});
-    const task = (src.days[srcDayIso]||[]).find(t=>t.id===id); if(!task) return;
-    await mutateWeek(srcMon, d=>{ d.days[srcDayIso]=(d.days[srcDayIso]||[]).filter(t=>t.id!==id); },
+  async copyWeek(){
+    if(!confirm("Copy this week's activities into next week's plan? Statuses reset to pending."))return;
+    const src=iso(viewMonday)===iso(thisMonday)?week:await loadDocX(weekRef(thisMonday),{days:{},log:[]});
+    const nm=addDays(viewMonday,7);
+    await mutateWeek(nm,d=>{
+      for(let i=0;i<7;i++){
+        const from=iso(addDays(thisMonday,i)), to=iso(addDays(nm,i));
+        const tasks=(src.days[from]||[]).map(t=>({...t,id:Date.now()+Math.random().toString(16).slice(2),status:"pending"}));
+        if(tasks.length) d.days[to]=[...(d.days[to]||[]),...tasks];
+      }
+    },"Copied this week's plan into this week");
+    alert("Copied! Adjust the plan as needed.");
+  },
+  async reschedule(srcDayIso,id){
+    const srcMon=mondayOf(new Date(srcDayIso+"T00:00:00"));
+    const src=await loadDocX(weekRef(srcMon),{days:{},log:[]});
+    const task=(src.days[srcDayIso]||[]).find(t=>t.id===id); if(!task)return;
+    await mutateWeek(srcMon,d=>{ d.days[srcDayIso]=(d.days[srcDayIso]||[]).filter(t=>t.id!==id); },
       `Rescheduled "${task.text}" from ${srcDayIso} to ${todayIso}`);
-    await mutateWeek(thisMonday, d=>{
+    await mutateWeek(thisMonday,d=>{
       d.days[todayIso]=[...(d.days[todayIso]||[]),{...task,id:Date.now()+Math.random().toString(16).slice(2),status:"pending"}];
     },`Rescheduled "${task.text}" here from ${srcDayIso}`);
     if(iso(viewMonday)===iso(thisMonday)) await loadWeek(false);
     loadMissed();
   },
-  async resolve(srcDayIso, id, st){
-    const srcMon = mondayOf(new Date(srcDayIso+"T00:00:00"));
-    await mutateWeek(srcMon, d=>{
-      d.days[srcDayIso]=(d.days[srcDayIso]||[]).map(t=>t.id===id?{...t,status:st}:t);
-    },`Resolved task on ${srcDayIso} as ${st}`);
+  async resolve(srcDayIso,id,st){
+    const srcMon=mondayOf(new Date(srcDayIso+"T00:00:00"));
+    await mutateWeek(srcMon,d=>{ d.days[srcDayIso]=(d.days[srcDayIso]||[]).map(t=>t.id===id?{...t,status:st}:t); },
+      `Resolved task on ${srcDayIso} as ${st}`);
     if(iso(viewMonday)===iso(srcMon)) await loadWeek(false);
     loadMissed();
   },
   addGoal(){
-    const el=document.getElementById("goal-in"); const v=(el?.value||"").trim(); if(!v) return;
+    const el=document.getElementById("goal-in"); const v=(el?.value||"").trim(); if(!v)return;
     monthData={goals:[...monthData.goals,{id:Date.now()+"",text:v,done:false}]};
-    render(); saveDoc(monthRef(viewMonth), monthData);
+    render(); saveDocX(monthRef(viewMonth),monthData);
   },
-  toggleGoal(id){
-    monthData={goals:monthData.goals.map(g=>g.id===id?{...g,done:!g.done}:g)};
-    render(); saveDoc(monthRef(viewMonth), monthData);
-  },
-  delGoal(id){
-    monthData={goals:monthData.goals.filter(g=>g.id!==id)};
-    render(); saveDoc(monthRef(viewMonth), monthData);
-  },
+  toggleGoal(id){ monthData={goals:monthData.goals.map(g=>g.id===id?{...g,done:!g.done}:g)}; render(); saveDocX(monthRef(viewMonth),monthData); },
+  delGoal(id){ if(!confirm("Delete this goal?"))return; monthData={goals:monthData.goals.filter(g=>g.id!==id)}; render(); saveDocX(monthRef(viewMonth),monthData); },
   async exportAll(){
-    const weeks={}, months={};
+    const weeks={},months={};
     (await getDocs(collection(db,"users",user.uid,"weeks"))).forEach(s=>weeks[s.id]=s.data());
     (await getDocs(collection(db,"users",user.uid,"months"))).forEach(s=>months[s.id]=s.data());
-    const blob=new Blob([JSON.stringify({exported:new Date().toISOString(),weeks,months},null,2)],{type:"application/json"});
-    const a=document.createElement("a");
-    a.href=URL.createObjectURL(blob); a.download=`phd-tracker-backup-${todayIso}.json`; a.click();
+    const blob=new Blob([JSON.stringify({app:"work-tracker",exported:new Date().toISOString(),weeks,months},null,2)],{type:"application/json"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`work-tracker-backup-${todayIso}.json`; a.click();
   },
-  signIn(){
-    const p=new GoogleAuthProvider();
-    signInWithPopup(auth,p).catch(()=>signInWithRedirect(auth,p));
-  },
-  signOut(){ signOut(auth); }
+  signIn(){ const p=new GoogleAuthProvider(); signInWithPopup(auth,p).catch(()=>signInWithRedirect(auth,p)); },
+  signOut(){ if(confirm("Sign out?")) signOut(auth); }
 };
 
 /* ---------- loaders ---------- */
-async function loadWeek(showLoading=true){
-  if(showLoading){ week={days:{},log:[]}; }
-  week = await loadDoc(weekRef(viewMonday), {days:{},log:[]});
-  render();
-}
-async function loadPlan(){
-  planWeek = await loadDoc(weekRef(addDays(viewMonday,7)), {days:{},log:[]});
-  render();
-}
-async function loadMonth(){
-  monthData = await loadDoc(monthRef(viewMonth), {goals:[]});
-  render();
-}
+async function loadWeek(showLoading=true){ week=await loadDocX(weekRef(viewMonday),{days:{},log:[]}); render(); }
+async function loadPlan(){ planWeek=await loadDocX(weekRef(addDays(viewMonday,7)),{days:{},log:[]}); render(); }
+async function loadMonth(){ monthData=await loadDocX(monthRef(viewMonth),{goals:[]}); render(); }
 async function loadMissed(){
   missedList=null; render();
   const out=[];
-  const snap = await getDocs(collection(db,"users",user.uid,"weeks"));
+  const snap=await getDocs(collection(db,"users",user.uid,"weeks"));
   snap.forEach(s=>{
-    const data=s.data();
-    for(const [dayIso,tasks] of Object.entries(data.days||{}))
+    for(const [dayIso,tasks] of Object.entries(s.data().days||{}))
       for(const t of tasks){
-        const overdue = t.status==="pending" && dayIso<todayIso;
+        const overdue=t.status==="pending"&&dayIso<todayIso;
         if(t.status==="missed"||overdue) out.push({dayIso,task:t,overdue});
       }
   });
   out.sort((a,b)=>a.dayIso.localeCompare(b.dayIso));
-  missedList=out; render();
+  missedList=out; missedCount=out.length; render();
+}
+async function refreshMissedCount(){
+  const snap=await getDocs(collection(db,"users",user.uid,"weeks"));
+  let n=0;
+  snap.forEach(s=>{
+    for(const [dayIso,tasks] of Object.entries(s.data().days||{}))
+      for(const t of tasks) if(t.status==="missed"||(t.status==="pending"&&dayIso<todayIso)) n++;
+  });
+  missedCount=n; render();
 }
 async function loadProgress(){
   progressData=null; render();
-  const weeks=[], months={};
-  const snap = await getDocs(collection(db,"users",user.uid,"weeks"));
-  const rows=[];
-  snap.forEach(s=>rows.push([s.id,s.data()]));
-  rows.sort((a,b)=>a[0].localeCompare(b[0]));
+  const weeks=[],months={},cats={};
+  const snap=await getDocs(collection(db,"users",user.uid,"weeks"));
+  const rows=[]; snap.forEach(s=>rows.push([s.id,s.data()])); rows.sort((a,b)=>a[0].localeCompare(b[0]));
   for(const [id,data] of rows){
     let total=0,done=0,missed=0;
     for(const [dayIso,tasks] of Object.entries(data.days||{})){
       total+=tasks.length;
-      done+=tasks.filter(t=>t.status==="done").length;
-      missed+=tasks.filter(t=>t.status==="missed").length;
+      for(const t of tasks){
+        if(t.status==="done"){done++; const c=t.cat||"other"; cats[c]=(cats[c]||0)+1;}
+        if(t.status==="missed")missed++;
+      }
       const mk=dayIso.slice(0,7);
       months[mk]=months[mk]||{total:0,done:0};
       months[mk].total+=tasks.length;
       months[mk].done+=tasks.filter(t=>t.status==="done").length;
     }
-    if(total>0) weeks.push({monday:id,total,done,missed});
+    if(total>0)weeks.push({monday:id,total,done,missed});
   }
-  progressData={weeks,months}; render();
+  progressData={weeks,months,cats}; render();
+}
+/* streak: consecutive days (ending today or yesterday) with ≥1 task and none pending/missed */
+async function computeStreak(){
+  const cache={};
+  const getWeek=async m=>{ const k=iso(m); if(!cache[k])cache[k]=await loadDocX(weekRef(m),{days:{}}); return cache[k]; };
+  let s=0, d=new Date();
+  const dayOk=async dt=>{
+    const w=await getWeek(mondayOf(dt));
+    const tasks=w.days[iso(dt)]||[];
+    if(tasks.length===0)return null; // skip empty days
+    return tasks.every(t=>t.status==="done");
+  };
+  // today counts only if fully done; otherwise start from yesterday
+  let start=new Date();
+  const todayState=await dayOk(start);
+  if(todayState===true)s++;
+  if(todayState===false){ streak=0; render(); return; }
+  d=addDays(start,-1);
+  for(let i=0;i<90;i++){
+    const st=await dayOk(d);
+    if(st===false)break;
+    if(st===true)s++;
+    d=addDays(d,-1);
+  }
+  streak=s; render();
 }
 
 /* ---------- rendering ---------- */
-function taskRowHtml(mIso, dayIso, t, showCheckin){
-  return `<div class="task">
-    <span class="dot ${t.status}"></span>
+function catSelect(idSuffix){
+  return `<select id="ct-${idSuffix}" title="Category">
+    <option value="">Category…</option>
+    ${Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("")}
+  </select>`;
+}
+function taskRowHtml(mIso,dayIso,t,showCheckin){
+  return `<div class="task" style="border-left-color:${catColor(t.cat)}">
     <button class="timechip ${t.time?"set":""}" onclick="A.time('${mIso}','${dayIso}','${t.id}')">${t.time||"time"}</button>
-    <span class="tasktext ${t.status==="done"?"done":""}">${esc(t.text)}</span>
+    <span class="tasktext ${t.status==="done"?"done":""}">${esc(t.text)}${t.cat&&CATS[t.cat]?` <span style="font-size:11px;color:${catColor(t.cat)}">· ${CATS[t.cat].label}</span>`:""}</span>
     ${showCheckin?`
-      <button class="ibtn ok ${t.status==="done"?"on":""}" title="Accomplished" onclick="A.status('${mIso}','${dayIso}','${t.id}','done')">✓</button>
-      <button class="ibtn no ${t.status==="missed"?"on":""}" title="Not accomplished" onclick="A.status('${mIso}','${dayIso}','${t.id}','missed')">✗</button>`:""}
-    <button class="ibtn" title="Edit" onclick="A.edit('${mIso}','${dayIso}','${t.id}')">✎</button>
-    <button class="ibtn" title="Delete" onclick="A.del('${mIso}','${dayIso}','${t.id}')">–</button>
+      <button class="ibtn ok ${t.status==="done"?"on":""}" onclick="A.status('${mIso}','${dayIso}','${t.id}','done')">✓</button>
+      <button class="ibtn no ${t.status==="missed"?"on":""}" onclick="A.status('${mIso}','${dayIso}','${t.id}','missed')">✗</button>`:""}
+    <button class="ibtn" onclick="A.edit('${mIso}','${dayIso}','${t.id}')">✎</button>
+    <button class="ibtn" onclick="A.del('${mIso}','${dayIso}','${t.id}')">–</button>
   </div>`;
 }
-function dayCardHtml(monday, index, data, planMode){
-  const date=addDays(monday,index), dayIso=iso(date), mIso=iso(monday);
+function addRowHtml(mIso,dayIso,idSuffix){
+  return `<div class="addrow">
+    <input type="time" id="tm-${idSuffix}">
+    ${catSelect(idSuffix)}
+    <input type="text" id="in-${idSuffix}" placeholder="Add activity…" onkeydown="if(event.key==='Enter')A.add('${mIso}','${dayIso}','${idSuffix}')">
+    <button class="btn" onclick="A.add('${mIso}','${dayIso}','${idSuffix}')">Add</button>
+  </div>`;
+}
+function dayCardHtml(monday,index,data,planMode){
+  const date=addDays(monday,index),dayIso=iso(date),mIso=iso(monday);
   const tasks=[...(data.days[dayIso]||[])].sort(sortByTime);
-  const isToday=dayIso===todayIso, isPast=dayIso<todayIso;
+  const isToday=dayIso===todayIso,isPast=dayIso<todayIso;
   const showCheckin=!planMode&&(isToday||isPast);
+  const suffix=(planMode?"p":"w")+dayIso;
   return `<div class="card ${isToday?"today":""}">
     <div class="dayhead">
       <span class="dayname">${DAY_NAMES[index]}${isToday?`<span class="todaytag">TODAY</span>`:""}</span>
       <span class="datetag">${niceDate(date)}</span>
     </div>
-    ${tasks.length===0?`<div class="empty">No activities yet — add one below.</div>`:""}
+    ${tasks.length===0?`<div class="empty">Nothing planned — add an activity below.</div>`:""}
     ${tasks.map(t=>taskRowHtml(mIso,dayIso,t,showCheckin)).join("")}
     ${showCheckin&&tasks.some(t=>t.status==="pending")?`<div class="hint">End-of-day check-in: mark each activity ✓ or ✗.</div>`:""}
-    <div class="addrow">
-      <input type="time" id="tm-${dayIso}">
-      <input type="text" id="in-${dayIso}" placeholder="Add activity (e.g. write lit review…)"
-        onkeydown="if(event.key==='Enter')A.add('${mIso}','${dayIso}')">
-      <button class="btn" onclick="A.add('${mIso}','${dayIso}')">Add</button>
-    </div>
+    ${addRowHtml(mIso,dayIso,suffix)}
   </div>`;
 }
-const barHtml=(pct,navy)=>`<div class="bar ${navy?"navy":""}"><div style="width:${pct}%"></div></div>`;
+const barHtml=(pct,color)=>`<div class="bar"><div style="width:${Math.min(100,pct)}%;${color?`background:${color}`:""}"></div></div>`;
+function ringHtml(pct){
+  const r=40,c=2*Math.PI*r,off=c*(1-pct/100);
+  return `<div class="ring"><svg width="96" height="96">
+    <circle cx="48" cy="48" r="${r}" fill="none" stroke="var(--line)" stroke-width="9"/>
+    <circle cx="48" cy="48" r="${r}" fill="none" stroke="var(--teal)" stroke-width="9" stroke-linecap="round"
+      stroke-dasharray="${c}" stroke-dashoffset="${off}" style="transition:stroke-dashoffset .6s"/>
+  </svg><div class="pct"><b>${pct}%</b><span>today</span></div></div>`;
+}
 
 function render(){
   if(!user){
     appEl.innerHTML=`<div class="auth">
-      <div class="eyebrow">Research log</div>
-      <h1>PhD Weekly Tracker</h1>
-      <p class="sub" style="margin-bottom:20px">Plan daily activities, check in each evening, set monthly goals, and track progress for the whole PhD.</p>
-      <button class="btn" onclick="A.signIn()" style="font-size:15px;padding:10px 20px">Sign in with Google</button>
+      <div class="eyebrow">Daily planning · evening check-ins · long-term progress</div>
+      <h1>Work Tracker</h1>
+      <p class="sub" style="margin:8px 0 24px">Plan your days, review each evening, set monthly goals,<br>and watch your progress build over months and years.</p>
+      <button class="btn" onclick="A.signIn()" style="font-size:15px;padding:12px 22px">Sign in with Google</button>
     </div>`;
     return;
   }
-  const isCurrentWeek = iso(viewMonday)===iso(thisMonday);
+  const isCurrentWeek=iso(viewMonday)===iso(thisMonday);
+  const todayTasks=[...((iso(viewMonday)===iso(thisMonday)?week:{days:{}}).days[todayIso]||[])].sort(sortByTime);
+  const tDone=todayTasks.filter(t=>t.status==="done").length;
+  const tPct=todayTasks.length?Math.round(tDone/todayTasks.length*100):0;
+  const allDone=todayTasks.length>0&&todayTasks.every(t=>t.status==="done");
+
   let stats={total:0,done:0,missed:0};
   for(let i=0;i<7;i++){
     const ts=week.days[iso(addDays(viewMonday,i))]||[];
-    stats.total+=ts.length;
-    stats.done+=ts.filter(t=>t.status==="done").length;
-    stats.missed+=ts.filter(t=>t.status==="missed").length;
+    stats.total+=ts.length; stats.done+=ts.filter(t=>t.status==="done").length; stats.missed+=ts.filter(t=>t.status==="missed").length;
   }
+
   let body="";
-  if(tab==="week"){
+  if(tab==="today"){
+    const mIso=iso(thisMonday);
+    body=`
+      <div class="card today pop">
+        <div class="hero">
+          ${ringHtml(tPct)}
+          <div class="herostats">
+            <div class="streak">🔥 <b>${streak===null?"…":streak}</b> day streak</div>
+            <div class="quickstats">
+              <span><b>${tDone}</b>/${todayTasks.length} done today</span>
+              <span><b>${stats.done}</b>/${stats.total} this week</span>
+              ${missedCount>0?`<span style="color:var(--red)"><b>${missedCount}</b> to review</span>`:""}
+            </div>
+            <div class="sub">${niceFull(todayIso)}</div>
+          </div>
+        </div>
+      </div>
+      ${allDone?`<div class="banner cele pop">🎉 All of today's activities accomplished — brilliant work. Rest well or plan tomorrow!</div>`:""}
+      ${isPlanningDay?`<div class="banner">It's ${DAY_NAMES[(dow+6)%7]} — planning day. Fill next week in <b>Plan</b>.</div>`:""}
+      <div class="card">
+        <div class="sectitle">Today's activities</div>
+        ${todayTasks.length===0?`<div class="empty">A blank day — add your first activity below.</div>`:""}
+        ${todayTasks.map(t=>taskRowHtml(mIso,todayIso,t,true)).join("")}
+        ${addRowHtml(mIso,todayIso,"today")}
+      </div>`;
+  } else if(tab==="week"){
     body=`<div class="navrow">
-        <button class="btn ghost" onclick="A.nav(-1)">← Prev</button>
+        <button class="btn ghost" onclick="A.nav(-1)">←</button>
         <span class="navtitle">Week of ${niceDate(viewMonday)} – ${niceDate(addDays(viewMonday,6))}</span>
-        <button class="btn ghost" onclick="A.nav(1)">Next →</button>
+        <button class="btn ghost" onclick="A.nav(1)">→</button>
       </div>
       ${!isCurrentWeek?`<button class="btn soft" style="margin-bottom:10px" onclick="A.jumpToday()">Jump to current week</button>`:""}
+      ${stats.total>0?`<div class="statrow" style="margin-bottom:8px">${barHtml(stats.total?stats.done/stats.total*100:0)}<span class="statnum" style="width:auto">${stats.done}/${stats.total} done${stats.missed?` · ${stats.missed} missed`:""}</span></div>`:""}
       ${Array.from({length:7},(_,i)=>dayCardHtml(viewMonday,i,week,false)).join("")}`;
   } else if(tab==="plan"){
     const nm=addDays(viewMonday,7);
     body=`<div class="navtitle" style="margin-bottom:6px;text-align:left">Planning week of ${niceDate(nm)} – ${niceDate(addDays(nm,6))}</div>
-      ${!isPlanningDay?`<p class="sub" style="margin-bottom:10px">Your rule: fill next week on <b>Friday</b> or <b>Monday</b> — but you can add anytime.</p>`:""}
+      ${!isPlanningDay?`<p class="sub" style="margin-bottom:8px">Your rule: plan next week on <b>Friday</b> or <b>Monday</b> — but you can add anytime.</p>`:""}
+      <button class="btn ghost" style="margin-bottom:10px" onclick="A.copyWeek()">⧉ Copy this week's plan → next week</button>
       ${Array.from({length:7},(_,i)=>dayCardHtml(nm,i,planWeek,true)).join("")}`;
-  } else if(tab==="missed"){
-    body=`<div class="card"><div class="sectitle">Not accomplished</div>
-      <p class="sub" style="margin-bottom:10px">Everything marked ✗ or left unchecked on a past day, across all weeks.</p>`;
+  } else if(tab==="review"){
+    body=`<div class="card"><div class="sectitle">Review — not accomplished</div>
+      <p class="sub" style="margin-bottom:10px">Everything marked ✗ or left unchecked on a past day, across your whole history.</p>`;
     if(missedList===null) body+=`<div class="empty">Scanning all weeks…</div>`;
-    else if(missedList.length===0) body+=`<div class="sub" style="color:var(--teal)">Nothing outstanding — everything is accounted for. 🎓</div>`;
+    else if(missedList.length===0) body+=`<div class="sub" style="color:var(--teal)">Nothing outstanding — everything is accounted for. ✨</div>`;
     else body+=missedList.map(({dayIso,task,overdue})=>`
-      <div class="task" style="flex-wrap:wrap">
+      <div class="task" style="flex-wrap:wrap;border-left-color:${catColor(task.cat)}">
         <span class="pill ${overdue?"overdue":"missed"}">${overdue?"unchecked":"missed"} · ${niceFull(dayIso)}${task.time?" "+task.time:""}</span>
         <span class="tasktext">${esc(task.text)}</span>
         <button class="btn ghost" style="border-color:var(--navy);color:var(--navy)" onclick="A.reschedule('${dayIso}','${task.id}')">→ Today</button>
@@ -405,7 +516,7 @@ function render(){
         <button class="btn ghost" onclick="A.navMonth(1)">→</button>
       </div>
       ${monthData.goals.length?`<div class="statrow">${barHtml(done/monthData.goals.length*100)}<span class="statnum" style="width:auto">${done}/${monthData.goals.length} done</span></div>`
-        :`<div class="empty">Set 2–4 big goals for this month (e.g. "submit chapter 2 draft").</div>`}
+        :`<div class="empty">Set 2–4 big goals for this month (e.g. "finish the report", "complete data collection").</div>`}
       ${monthData.goals.map(g=>`<div class="task">
         <button class="ibtn ok ${g.done?"on":""}" onclick="A.toggleGoal('${g.id}')">${g.done?"✓":""}</button>
         <span class="tasktext ${g.done?"done":""}" style="font-size:15px">${esc(g.text)}</span>
@@ -421,11 +532,20 @@ function render(){
     else{
       const T=progressData.weeks.reduce((a,w)=>({total:a.total+w.total,done:a.done+w.done,missed:a.missed+w.missed}),{total:0,done:0,missed:0});
       const pct=T.total?Math.round(T.done/T.total*100):0;
+      const best=progressData.weeks.reduce((b,w)=>{const p=w.total?w.done/w.total:0;return p>b.p?{p,w}:b;},{p:-1,w:null});
+      const catTotal=Object.values(progressData.cats).reduce((a,b)=>a+b,0);
       body=`<div class="card"><div class="sectitle">All-time</div>
-        <span style="font-family:Georgia,serif;font-size:22px"><b>${pct}%</b></span> accomplished
-        <span class="sub" style="margin-left:12px">${T.done} done · ${T.missed} missed · ${T.total} planned · ${progressData.weeks.length} weeks tracked</span>
-        <div style="margin-top:10px"><button class="btn ghost" onclick="A.exportAll()">⬇ Export backup (JSON)</button></div>
+        <span style="font-family:Georgia,serif;font-size:24px"><b>${pct}%</b></span> accomplished
+        <div class="sub" style="margin-top:4px">${T.done} done · ${T.missed} missed · ${T.total} planned · ${progressData.weeks.length} weeks tracked
+        ${best.w?` · best week: ${niceDate(new Date(best.w.monday+"T00:00:00"))} (${Math.round(best.p*100)}%)`:""}</div>
+        <div style="margin-top:12px"><button class="btn ghost" onclick="A.exportAll()">⬇ Export backup (JSON)</button></div>
       </div>
+      ${catTotal>0?`<div class="card"><div class="sectitle">Where your accomplished work goes</div>
+        ${Object.entries(progressData.cats).sort((a,b)=>b[1]-a[1]).map(([c,n])=>`<div class="statrow">
+          <span class="statlabel">${(CATS[c]||{label:"Other"}).label}</span>
+          ${barHtml(n/catTotal*100,catColor(c)||"var(--ink-soft)")}
+          <span class="statnum">${n}</span></div>`).join("")}
+      </div>`:""}
       <div class="card"><div class="sectitle">Week by week (last 16)</div>
         ${progressData.weeks.length===0?`<div class="empty">No tracked weeks yet.</div>`:""}
         ${progressData.weeks.slice(-16).map(w=>`<div class="statrow">
@@ -436,7 +556,7 @@ function render(){
       <div class="card"><div class="sectitle">Month by month</div>
         ${Object.entries(progressData.months).sort(([a],[b])=>a.localeCompare(b)).map(([mk,m])=>`<div class="statrow">
           <span class="statlabel">${MONTHS[parseInt(mk.slice(5))-1].slice(0,3)} ${mk.slice(0,4)}</span>
-          ${barHtml(m.total?m.done/m.total*100:0,true)}
+          ${barHtml(m.total?m.done/m.total*100:0,"var(--navy)")}
           <span class="statnum">${m.done}/${m.total}</span></div>`).join("")}
       </div>`;
     }
@@ -447,31 +567,31 @@ function render(){
     </div>`;
   }
 
+  const TABS=[["today","Today","🏠"],["week","Week","📅"],["plan","Plan","🗓"],["review","Review","↩️"],["month","Goals","🎯"],["progress","Progress","📈"],["log","Log","📜"]];
   appEl.innerHTML=`
     <div class="topbar">
       <header>
-        <div class="eyebrow">Research log</div>
-        <h1>PhD Weekly Tracker</h1>
-        <div class="sub">${stats.total>0
-          ?`This week: ${stats.done}/${stats.total} accomplished${stats.missed?`, ${stats.missed} missed`:""}`
-          :`Plan your days, check in each evening, plan next week on Friday or Monday.`}
-          <span id="savestate" class="savestate"></span>
-        </div>
+        <div class="eyebrow">${greeting()}${user.displayName?", "+esc(user.displayName.split(" ")[0]):""}</div>
+        <h1>Work Tracker</h1>
+        <div class="sub">${stats.total>0?`This week: ${stats.done}/${stats.total} accomplished${stats.missed?`, ${stats.missed} missed`:""}`:`Plan your days, check in each evening.`}<span id="savestate" class="savestate"></span></div>
       </header>
-      <div class="userchip">${esc(user.displayName||user.email||"")}<br><a onclick="A.signOut()">sign out</a></div>
+      <div class="toprt">
+        <button class="ibtn" title="Toggle dark mode" onclick="A.theme()">${theme==="light"?"🌙":"☀️"}</button>
+        <div class="userchip"><a onclick="A.signOut()">sign out</a></div>
+      </div>
     </div>
-    ${iso(viewMonday)===iso(thisMonday)&&isPlanningDay?`<div class="banner">It's ${DAY_NAMES[(dow+6)%7]} — planning day. Fill next week's activities in <b>Plan next week</b>.</div>`:""}
     <div class="tabs">
-      ${[["week","This week"],["plan","Plan next week"],["missed","Not accomplished"],["month","Monthly goals"],["progress","Progress"],["log","Change log"]]
-        .map(([id,l])=>`<button class="tab ${tab===id?"on":""}" onclick="A.setTab('${id}')">${l}</button>`).join("")}
+      ${TABS.map(([id,l,ico])=>`<button class="tab ${tab===id?"on":""}" onclick="A.setTab('${id}')">
+        <span class="ico">${ico}</span>${l}${id==="review"&&missedCount>0?`<span class="badge">${missedCount>9?"9+":missedCount}</span>`:""}
+      </button>`).join("")}
     </div>
     ${body}`;
-  paintSaveState();
+  paintSave();
 }
 
 onAuthStateChanged(auth, async u=>{
   user=u;
-  if(u){ await loadWeek(); } else render();
+  if(u){ await loadWeek(); computeStreak(); refreshMissedCount(); } else render();
 });
 render();
 </script>
